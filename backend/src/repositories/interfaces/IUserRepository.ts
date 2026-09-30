@@ -3,6 +3,7 @@ import { User } from "../../models/User.js";
 export interface IUserRepository {
     crearUsuario(user: User): Promise<User>
     listarUsuarios(): Promise<User[]>
-    editarUsuario(id: number): Promise<User>
+    listarUsuarioPorID(id: number): Promise<User>
+    editarUsuario(id: number): Promise<void>
     eliminarUsuario(id: number): Promise<User>
 }
