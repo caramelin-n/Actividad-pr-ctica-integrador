@@ -28,7 +28,7 @@ Libro.init(
             allowNull: false,
         },
         state: {
-            type: DataTypes.ENUM("DISPONIBLE", "PRESTADO", "EN REPARACION"),
+            type: DataTypes.ENUM("DISPONIBLE", "PRESTADO", "EN_REPARACION"),
             allowNull: false,
         },
         createdAt: DataTypes.DATE,

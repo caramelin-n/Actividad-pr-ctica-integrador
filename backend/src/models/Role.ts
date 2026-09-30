@@ -16,7 +16,8 @@ Role.init(
             primaryKey: true,
         },
         name: {
-            type: DataTypes.ENUM('admin', 'operador', 'usuario')
+            type: DataTypes.ENUM('admin', 'operador', 'usuario'),
+            allowNull: false,
         },
     },
     {
