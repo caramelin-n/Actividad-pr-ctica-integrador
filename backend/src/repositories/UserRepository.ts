@@ -11,11 +11,12 @@ export class UserRepository implements IUserRepository {
         return User.findAll()
     }
 
-    async listarUsuarioPorID(id: number): Promise<User> {
+    async listarUsuarioPorID(id: number): Promise<User | null> {
         return User.findByPk(id)
     }
 
-    async editarUsuario(id: number): Promise<User> {
-        return User.update(id)
+    async editarUsuario(id: number, user: User): Promise<void> {
+        const updatedUser = await this.listarUsuarioPorID(id)
+        if 
     }
 }
