@@ -1,19 +1,9 @@
-import { Model, type CreationOptional } from "sequelize";
+import { Model, DataTypes, type InferAttributes, type InferCreationAttributes,type CreationOptional } from "sequelize";
+import { DBConnection } from "../database/DatabaseConnection.js";
 
 type estadosDisponibles = 'DISPONIBLE' | 'PRESTADO' | 'EN_REPARACION'
 
-// export class Libro {
-//     constructor(
-//         public id: number,
-//         public title: string,
-//         public description: string,
-//         public state: estadosDisponibles,
-//         public createdAt: Date,
-//         public updatedAt: Date,
-//      ) {}
-// }
-
-export class Libro extends Model {
+export class Libro extends Model <InferAttributes<Libro>, InferCreationAttributes<Libro>> {
     declare id: CreationOptional<number>;
     declare title: string;
     declare description: string;
@@ -22,8 +12,31 @@ export class Libro extends Model {
     declare updatedAt: Date;
 }
 
-/*  
-TODO: Debe hacerse un mini-refactor, no solo acá sino en todos los modelos.
-El motivo se debe a que se necesita de la instancia de sequelize, para poder instanciar acá como:
-new sequelize(Libro ...)
-*/
+Libro.init(
+    {
+        id: {
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            primaryKey: true,
+        },
+        title: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        description: {
+            type: DataTypes.TEXT,
+            allowNull: false,
+        },
+        state: {
+            type: DataTypes.ENUM("DISPONIBLE", "PRESTADO", "EN REPARACION"),
+            allowNull: false,
+        },
+        createdAt: DataTypes.DATE,
+        updatedAt: DataTypes.DATE,
+    },
+    {
+        sequelize: DBConnection.getInstance(),
+        tableName: "libros",
+        timestamps: true
+    }
+)
