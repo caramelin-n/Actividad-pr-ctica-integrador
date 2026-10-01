@@ -1,11 +1,9 @@
-import { User } from "../../models/User.js";
-
-
+import { CreateUserDTO, UpdateUserDTO, UserResponseDTO } from "../../dtos/user/UserDto.js";
 
 export interface IUserRepository {
-    crearUsuario(user: User): Promise<User>
-    listarUsuarios(): Promise<User[]>
-    listarUsuarioPorID(id: number): Promise<User | null>
-    editarUsuario(id: number): Promise<void>
-    eliminarUsuario(id: number): Promise<User>
+    crearUsuario(data: CreateUserDTO): Promise<UserResponseDTO>
+    listarUsuarios(): Promise<UserResponseDTO[]>
+    listarUsuarioPorID(id: number): Promise<UserResponseDTO | null>
+    editarUsuario(id: number, data: UpdateUserDTO): Promise<void>
+    eliminarUsuario(id: number): Promise<void>
 }
