@@ -12,4 +12,25 @@ export class AuthController {
             next(error)
         }
     }
+
+    loginUser = async (req:Request, res: Response, next: NextFunction) => {
+        try {
+            const token = await this.authService.login(req.body)
+            res.cookie("token", token, {
+                httpOnly: true,
+                maxAge: 60*60*1000
+            })
+            res.status(200).json("Sesión iniciada con éxito")
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    getAuthenticatedUser = async (req:Request, res: Response, next: NextFunction) => {
+        try {
+            
+        } catch (error) {
+            
+        }
+    }
 }

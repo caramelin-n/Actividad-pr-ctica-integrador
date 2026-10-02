@@ -1,4 +1,5 @@
-import { CreateUserDTO, UpdateUserDTO, UserResponseDTO } from "../dtos/user/UserDto.js";
+import { where } from "sequelize";
+import { CreateUserDTO, UpdateUserDTO, UserRawModel, UserResponseDTO } from "../dtos/user/UserDto.js";
 import { User } from "../models/User.js";
 import { IUserRepository } from "./interfaces/IUserRepository.js";
 
@@ -8,7 +9,7 @@ export class UserRepository implements IUserRepository {
         return await User.create(data)
     }
 
-    async listarUsuarioPorID(id: number): Promise<UserResponseDTO | null> {
+    async listarUsuarioPorID(id: number): Promise<UserRawModel | null> {
         return await User.findByPk(id)
     }
 
@@ -26,5 +27,9 @@ export class UserRepository implements IUserRepository {
         const user = await User.findByPk(id)
         if (!user) throw new Error(`No se encontró al usuario ${id}`)
         await user.destroy()
+    }
+
+    async buscarUsuarioPorEmail(email: string): Promise<UserRawModel | null> {
+        return await User.findOne({ where: { email: email } })
     }
 }
