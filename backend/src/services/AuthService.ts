@@ -38,5 +38,12 @@ export class AuthService {
         return newToken
     }
     
+    async getAuthUser(id: number): Promise<UserResponseDTO> {
+        const user = await this.userRepository.listarUsuarioPorID(id)
+        if (!user) {
+            throw new NotFoundError("El usuario no existe")
+        }
+        return user
+    }
 
 }

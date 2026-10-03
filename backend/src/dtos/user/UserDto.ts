@@ -27,7 +27,7 @@ export interface RegisterUserDTO {
 export interface UserJWTDTO {
     id: number,
     email: string,
-    roleId: number,
+    roleId: number | null,
 }
 
 export interface LoginUserDTO {

@@ -1,4 +1,3 @@
-import { where } from "sequelize";
 import { CreateUserDTO, UpdateUserDTO, UserRawModel, UserResponseDTO } from "../dtos/user/UserDto.js";
 import { User } from "../models/User.js";
 import { IUserRepository } from "./interfaces/IUserRepository.js";

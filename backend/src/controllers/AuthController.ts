@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { AuthService } from "../services/AuthService.js";
+import { NotFoundError } from "../middlewares/errorHandler.js";
 
 export class AuthController {
     constructor(private authService: AuthService) {}
@@ -28,9 +29,19 @@ export class AuthController {
 
     getAuthenticatedUser = async (req:Request, res: Response, next: NextFunction) => {
         try {
-            
+            const authUserId = req.user?.id
+            if (authUserId === undefined) {
+                throw new NotFoundError("No hay usuario autenticado")
+            }
+            const currentUser = await this.authService.getAuthUser(authUserId)
+            res.status(200).json(currentUser)
         } catch (error) {
-            
+            next(error)
         }
+    }
+
+    logout = async (req:Request, res: Response) => {
+        res.clearCookie("token")
+        res.status(200).json("Sesión cerrada con éxito")
     }
 }
