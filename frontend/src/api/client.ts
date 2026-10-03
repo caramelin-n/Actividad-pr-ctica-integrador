@@ -18,7 +18,7 @@ export function setUnauthorizedHandler(handler: () => void): void{
   onUnauthorized = handler
 };
 type Method = "GET" | "POST" | "PATCH" | "DELETE";
-async function request<T>(
+export async function request<T>(
   path: string,
   method: Method,
   body?: unknown,
