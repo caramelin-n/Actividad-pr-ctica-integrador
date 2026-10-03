@@ -29,6 +29,6 @@ export class UserRepository implements IUserRepository {
     }
 
     async buscarUsuarioPorEmail(email: string): Promise<UserRawModel | null> {
-        return await User.findOne({ where: { email: email } })
+        return await User.findOne({ where: { email: email }, attributes: { exclude: ["password"]} })
     }
 }
