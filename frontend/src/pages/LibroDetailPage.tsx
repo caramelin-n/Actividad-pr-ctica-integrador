@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react"; //usestate para guardar datos que cuando cambian vuelven a dibujar la pantalla. useeffect para ejecutar codigo en momentos concretos
 import { useParams, useNavigate } from "react-router"; //useparams lee el :id de la url y usenavigate cambia la ruta desde el codigo
 import { librosApi } from "../api/libros.api";
-import { notificationsApi } from "../api/notifications.api";
 import { Can } from "../components/Can";
 import type { Libro, EstadoLibro } from "../types";
 import { useAuth } from "../context/AuthContext";
@@ -11,7 +10,7 @@ import { useAuth } from "../context/AuthContext";
 export const LibroDetailPage = () => {
   const { id } = useParams();// id viene de la url como texto
   const navigate = useNavigate();
-  const { user, tienePermiso } = useAuth() // user es el usuario logueado y se checkea si tiene permiso
+  const { user } = useAuth() // user es el usuario logueado. El chequeo de permisos lo hace <Can>
   const [libro, setLibro] = useState<Libro | null>(null); //guarda el libro cargado y la funcion para cambiar su valor. Es un libro o nada.
   const [cargando, setCargando] = useState(true); //un simple cargando para agregar a la pagina
   const [subscribed, setSubscribed] = useState(false);// subscirbed = esta suscripto. empieza en false hasta que se demuestre lo contrario
@@ -42,8 +41,8 @@ export const LibroDetailPage = () => {
     librosApi
       .verificarSuscripcion(libro.id) //verifica si esta suscrito o no
       .then((data) => {
-        if (vivo) setSubscribed(data.subscribed);
-      }); //guarda la respuesta para que el boton muestre "suscribirse" o "desuscribirse"
+        if (vivo) setSubscribed(data.suscrito);
+      }) //guarda la respuesta para que el boton muestre "suscribirse" o "desuscribirse"
       .catch(() => {
         //no pongo un seterror porqwue va a tapar todo el libro, mejor hago que falle en silencio
         if (vivo) setSubscribed(false);
@@ -135,6 +134,10 @@ export const LibroDetailPage = () => {
           </div>
         </Can>
       </div>
+
+      {/* Sin esto el catch de handleSubscribe/handleCambiarEstado guardaria el
+          error en el estado pero no lo mostraria nunca. */}
+      {errorAccion && <p role="alert">{errorAccion}</p>}
 
       <button onClick={() => navigate(-1)} className="boton-secundario">
         Volver a la lista
