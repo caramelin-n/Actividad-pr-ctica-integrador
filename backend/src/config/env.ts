@@ -1,12 +1,16 @@
 import dotenv from "dotenv"
 dotenv.config()
 
-export const DB_HOST = process.env
-export const DB_PORT = process.env
-export const DB_USER = process.env
-export const DB_PASSWORD = process.env
-export const DB_NAME = process.env
-export const JWT_SECRET = process.env
-export const API_PORT = process.env
+const envValidation = (variable: string): string => {
+    const value = process.env[variable]
+    if (!value) throw new Error(`Falta una variable de entorno: ${variable}`)
+    return value
+}
 
-// Modificar esto cuando se tenga el .env global.
+export const DB_HOST = envValidation("DB_HOST")
+export const DB_PORT = Number(envValidation("DB_PORT"))
+export const DB_USER = envValidation("POSTGRES_USER")
+export const DB_PASSWORD = envValidation("POSTGRES_PASSWORD")
+export const DB_NAME = envValidation("POSTGRES_DB")
+export const JWT_SECRET = envValidation("JWT_SECRET")
+export const API_PORT = envValidation("API_PORT")
