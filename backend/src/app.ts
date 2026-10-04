@@ -8,11 +8,13 @@ import { JWTHandler } from "./helpers/JWTHelper.js"
 import { UserParser } from "./dtos/user/UserDto.js"
 import { AuthMiddleware } from "./middlewares/authenticate.js"
 import { handleError } from "./middlewares/errorHandler.js"
+import { RoleRepository } from "./repositories/RoleRepository.js"
 
 const jwtParser = new UserParser()
 const jwtHandler = new JWTHandler()
 const userRepository = new UserRepository()
-const authService = new AuthService(userRepository, jwtHandler, jwtParser)
+const roleRepository = new RoleRepository()
+const authService = new AuthService(userRepository, jwtHandler, jwtParser, roleRepository)
 const authController = new AuthController(authService)
 const authMiddleware = new AuthMiddleware(jwtHandler)
 

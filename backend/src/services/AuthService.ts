@@ -1,13 +1,15 @@
-import { LoginUserDTO, RegisterUserDTO, UserParser, UserResponseDTO } from "../dtos/user/UserDto.js";
+import { AuthUserResponseDTO, LoginUserDTO, RegisterUserDTO, UserParser, UserResponseDTO } from "../dtos/user/UserDto.js";
 import { hashPassword } from "../helpers/BcryptHelper.js";
 import { JWTHandler } from "../helpers/JWTHelper.js";
 import { BadRequestError, NotFoundError } from "../middlewares/errorHandler.js";
 import { IUserRepository } from "../repositories/interfaces/IUserRepository.js";
+import { RoleRepository } from "../repositories/RoleRepository.js";
 
 export class AuthService {
     constructor(private userRepository: IUserRepository,
         private jwtUtil: JWTHandler,
         private jwtParser: UserParser,
+        private roleRepository: RoleRepository
     ) {}
 
     async register(data: RegisterUserDTO): Promise<UserResponseDTO> {
@@ -17,9 +19,14 @@ export class AuthService {
         }
         const validEmail = data.email.trim().toLowerCase()
         const hashedPassword = await hashPassword(password)
+        const defaultRole = await this.roleRepository.obtenerRolPorNombre("usuario")
+        if (!defaultRole) {
+            throw new NotFoundError("No se encontró el rol.")
+        }
         const user = await this.userRepository.crearUsuario({
             email: validEmail,
-            password: hashedPassword
+            password: hashedPassword,
+            roleId: defaultRole.id
         })
         return user
     }
@@ -38,12 +45,15 @@ export class AuthService {
         return newToken
     }
     
-    async getAuthUser(id: number): Promise<UserResponseDTO> {
+    async getAuthUser(id: number): Promise<AuthUserResponseDTO> {
         const user = await this.userRepository.listarUsuarioPorID(id)
         if (!user) {
             throw new NotFoundError("El usuario no existe")
         }
-        return user
+        const permissions = user.roleId
+        ? await this.roleRepository.obtenerPermisos(user.roleId)
+        : []
+        return { id: user.id, email: user.email, roleId: user.roleId, permissions}
     }
 
 }

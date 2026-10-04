@@ -40,7 +40,7 @@ export class AuthController {
         }
     }
 
-    logout = async (req:Request, res: Response) => {
+    logout = async (_req:Request, res: Response) => {
         res.clearCookie("token")
         res.status(200).json("Sesión cerrada con éxito")
     }

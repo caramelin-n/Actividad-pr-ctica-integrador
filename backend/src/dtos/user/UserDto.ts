@@ -46,3 +46,7 @@ export class UserParser {
         }
     }
 }
+
+export interface AuthUserResponseDTO extends UserResponseDTO {
+    permissions: string[]
+} 

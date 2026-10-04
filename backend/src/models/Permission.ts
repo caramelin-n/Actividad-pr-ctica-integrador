@@ -16,6 +16,7 @@ Permission.init(
         permissionName: {
             type: DataTypes.STRING,
             allowNull: false,
+            unique: true,
         }
     },
     {

@@ -2,10 +2,12 @@ import { app } from "./app.js"
 import { DBConnection } from "./database/DatabaseConnection.js"
 import "./models/Relations.js"
 import { API_PORT } from "./config/env.js"
+import { runSeed } from "./database/seed.js"
 
 async function main() {
     await DBConnection.connect()
     await DBConnection.getInstance().sync()
+    await runSeed()
     app.listen(API_PORT, () => console.log(`Servidor encendido y escuchando en localhost:${API_PORT}`))
 }
 

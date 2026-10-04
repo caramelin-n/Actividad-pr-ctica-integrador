@@ -18,6 +18,7 @@ Role.init(
         name: {
             type: DataTypes.ENUM('admin', 'operador', 'usuario'),
             allowNull: false,
+            unique: true,
         },
     },
     {
