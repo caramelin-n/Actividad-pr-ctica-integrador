@@ -8,7 +8,7 @@ export function ProtectedRoute({ children }: { children: ReactNode }) {
 
   // Mientras se consulta /auth/me no se sabe todavia si hay sesion.
   // Decidir antes de que responda mandaria al usuario a /login sin motivo.
-  if (cargando) return <p>Cargando...</p>;
+  if (cargando) return <p className="cargando">Cargando...</p>;
 
   // 'state' guarda a donde iba, para devolverlo despues de loguearse.
   if (!user) return <Navigate to="/login" replace state={{ from: location.pathname }} />;

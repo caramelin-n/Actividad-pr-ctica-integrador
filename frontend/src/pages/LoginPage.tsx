@@ -38,40 +38,44 @@ export const LoginPage = () => {
   }
 
   return (
-    <div>
-      <h1>Iniciar sesión</h1>
+    <div className="auth">
+      <div className="auth-tarjeta">
+        <h1 className="auth-titulo">Iniciar sesión</h1>
 
-      {error && <p role="alert">{error}</p>}
+        {error && <p role="alert">{error}</p>}
 
-      <form onSubmit={handleSubmit}>
-        <label>
-          Email
-          <input
-            type="email"
-            value={email}
-            required
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </label>
+        <form onSubmit={handleSubmit}>
+          <label>
+            Email
+            <input
+              type="email"
+              value={email}
+              required
+              autoComplete="email"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </label>
 
-        <label>
-          Contraseña
-          <input
-            type="password"
-            value={password}
-            required
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </label>
+          <label>
+            Contraseña
+            <input
+              type="password"
+              value={password}
+              required
+              autoComplete="current-password"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </label>
 
-        <button type="submit" disabled={enviando}>
-          {enviando ? "Entrando..." : "Entrar"}
-        </button>
-      </form>
+          <button type="submit" className="boton boton-bloque" disabled={enviando}>
+            {enviando ? "Entrando..." : "Entrar"}
+          </button>
+        </form>
 
-      <p>
-        ¿No tenés cuenta? <Link to="/register">Registrate acá</Link>
-      </p>
+        <p className="auth-pie">
+          ¿No tenés cuenta? <Link to="/register">Registrate acá</Link>
+        </p>
+      </div>
     </div>
   );
 };

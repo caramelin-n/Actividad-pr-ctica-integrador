@@ -21,7 +21,10 @@ export const Navbar = () => {
           {!cargando && user && (
             <>
               <span className="navbar-usuario">
-                {user.nombre} · {user.rol}
+                {user.email}
+                {/* el backend todavia no manda rol, si no existe no mostramos
+                    el separador para que no quede "email · " colgando */}
+                {user.rol && ` · ${user.rol}`}
               </span>
               <button type="button" onClick={handleLogout} className="boton-secundario">
                 Cerrar sesión

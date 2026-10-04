@@ -12,7 +12,9 @@ export type Permiso = string;
 export interface User {
   id: number;
   email: string;
-  nombre: string;
+  // El backend no manda nombre: RegisterUserDTO y UserResponseDTO son
+  // { email, password } / { id, email, roleId }. Si algún dia lo agrega,
+  // se vuelve a sumar aca y al Navbar.
   rol: Rol;
   permisos: Permiso[];
 }
