@@ -1,9 +1,10 @@
 import type { ReactNode } from "react";
 import { Navigate, useLocation } from "react-router";
 import { useAuth } from "../context/AuthContext";
+import type { Permiso } from "../types";
 
-export function ProtectedRoute({ children }: { children: ReactNode }) {
-  const { user, cargando } = useAuth();
+export function ProtectedRoute({ children, permiso }: { children: ReactNode; permiso?: Permiso }) {
+  const { user, cargando, tienePermiso } = useAuth();
   const location = useLocation();
 
   // Mientras se consulta /auth/me no se sabe todavia si hay sesion.
@@ -12,6 +13,8 @@ export function ProtectedRoute({ children }: { children: ReactNode }) {
 
   // 'state' guarda a donde iba, para devolverlo despues de loguearse.
   if (!user) return <Navigate to="/login" replace state={{ from: location.pathname }} />;
+
+  if (permiso && !tienePermiso(permiso)) return <Navigate to="/" replace />;
 
   return <>{children}</>;
 }
