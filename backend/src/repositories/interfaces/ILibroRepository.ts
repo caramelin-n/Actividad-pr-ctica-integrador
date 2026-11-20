@@ -1,10 +1,11 @@
-import { Libro } from "../../models/Libro.js";
+import { CreateLibroDTO, LibroResponseDTO, UpdateLibroDTO } from "../../dtos/libro/LibroDto.js";
+import { estadosDisponibles } from "../../models/Libro.js";
 
 export interface ILibroRepository {
-    listarLibros(): Promise<Libro[]>
-    verDetalle(id: number): Promise<Libro>
-    crearLibro(libro: Libro): Promise<Libro>
-    editarLibro(id: number): Promise<Libro>
-    cambiarEstado(id: number, nuevoEstado: string): Promise<Libro>
-    eliminarLibro(id: number): Promise<Libro>
+    listarLibros(): Promise<LibroResponseDTO[]>
+    verDetalle(id: number): Promise<LibroResponseDTO | null>
+    crearLibro(data: CreateLibroDTO): Promise<LibroResponseDTO>
+    editarLibro(id: number, data: UpdateLibroDTO): Promise<LibroResponseDTO | null>
+    cambiarEstado(id: number, nuevoEstado: estadosDisponibles): Promise<LibroResponseDTO | null>
+    eliminarLibro(id: number): Promise<boolean>
 }
