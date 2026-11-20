@@ -16,7 +16,8 @@ export type UpdateUserDTO = Partial<CreateUserDTO>
 export interface UserResponseDTO {
     id: number,
     email: string,
-    roleId: number | null
+    roleId: number | null,
+    role?: string | null,
 }
 
 export interface RegisterUserDTO {
@@ -31,9 +32,19 @@ export interface UserJWTDTO {
 }
 
 export interface LoginUserDTO {
-    id: number,
     email: string,
     password: string,
+}
+
+export interface AuthenticatedUserDTO {
+    id: number,
+    email: string,
+    role: string | null,
+    permissions: string[],
+}
+
+export interface AssignRoleDTO {
+    role: string,
 }
 
 export class UserParser {
@@ -43,6 +54,15 @@ export class UserParser {
             id: user.id,
             email: user.email,
             roleId: user.roleId,
+        }
+    }
+
+    public ResponseParser(user: UserRawModel, role: string | null = null): UserResponseDTO {
+        return {
+            id: user.id,
+            email: user.email,
+            roleId: user.roleId ?? null,
+            role: role,
         }
     }
 }
