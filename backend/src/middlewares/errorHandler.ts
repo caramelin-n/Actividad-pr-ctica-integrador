@@ -24,6 +24,27 @@ export class BadRequestError extends HttpError {
     }
 }
 
+export class UnauthorizedError extends HttpError {
+
+    constructor(message: string = "Unauthorized", statusCode: number = 401) {
+        super(message, statusCode)
+    }
+}
+
+export class ForbiddenError extends HttpError {
+
+    constructor(message: string = "Forbidden", statusCode: number = 403) {
+        super(message, statusCode)
+    }
+}
+
+export class ConflictError extends HttpError {
+
+    constructor(message: string = "Conflict", statusCode: number = 409) {
+        super(message, statusCode)
+    }
+}
+
 export class InternalServerError extends HttpError {
 
     constructor(message: string = "Internal Server Error", statusCode: number = 500) {
