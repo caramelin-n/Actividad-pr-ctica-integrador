@@ -1,5 +1,5 @@
-import { Model, DataTypes, type InferAttributes, type InferCreationAttributes, type CreationOptional, type ForeignKey} from "sequelize";
-import { Role } from "./Role.js";
+import { Model, DataTypes, type InferAttributes, type InferCreationAttributes, type CreationOptional, type ForeignKey, type NonAttribute } from "sequelize";
+import type { Role } from "./Role.js";
 import { DBConnection } from "../database/DatabaseConnection.js";
 
 export class User extends Model <InferAttributes<User>, InferCreationAttributes<User>> {
@@ -7,6 +7,7 @@ export class User extends Model <InferAttributes<User>, InferCreationAttributes<
     declare email: string;
     declare password: string;
     declare roleId: ForeignKey<Role["id"]>;
+    declare Role?: NonAttribute<Role>;
 }
 
 User.init(

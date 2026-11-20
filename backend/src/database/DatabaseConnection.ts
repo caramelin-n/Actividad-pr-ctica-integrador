@@ -16,6 +16,7 @@ export class DBConnection {
                 username: DB_USER,
                 password: DB_PASSWORD,
                 database: DB_NAME,
+                logging: false,
             })
         }
         return DBConnection.instance
@@ -23,5 +24,9 @@ export class DBConnection {
 
     static async connect(): Promise<void> {
         await DBConnection.getInstance().authenticate()
+    }
+
+    static async sync(): Promise<void> {
+        await DBConnection.getInstance().sync()
     }
 }

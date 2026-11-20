@@ -1,11 +1,14 @@
-import { Model, DataTypes, type InferAttributes, type InferCreationAttributes, type CreationOptional } from "sequelize";
+import { Model, DataTypes, type InferAttributes, type InferCreationAttributes, type CreationOptional, type NonAttribute } from "sequelize";
+import type { Permission } from "./Permission.js";
 import { DBConnection } from "../database/DatabaseConnection.js";
 
-type rolesDisponibles = 'admin' | 'operador' | 'usuario'
+export const ROLES = ['admin', 'operador', 'usuario'] as const
+export type rolesDisponibles = typeof ROLES[number]
 
 export class Role extends Model<InferAttributes<Role>, InferCreationAttributes<Role>> {
     declare id: CreationOptional<number>;
     declare name: rolesDisponibles;
+    declare Permissions?: NonAttribute<Permission[]>;
 }
 
 Role.init(
@@ -16,8 +19,9 @@ Role.init(
             primaryKey: true,
         },
         name: {
-            type: DataTypes.ENUM('admin', 'operador', 'usuario'),
+            type: DataTypes.ENUM(...ROLES),
             allowNull: false,
+            unique: true,
         },
     },
     {

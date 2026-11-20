@@ -22,4 +22,9 @@ Permission.belongsToMany(Role, { through: RolePermission, foreignKey: "permissio
 User.belongsToMany(Libro, { through: Subscription, foreignKey: "userId" })
 Libro.belongsToMany(User, { through: Subscription, foreignKey: "libroId"})
 
-export { Notification, Role, User, Libro }
+User.hasMany(Subscription, { foreignKey: "userId" })
+Subscription.belongsTo(User, { foreignKey: "userId" })
+Libro.hasMany(Subscription, { foreignKey: "libroId" })
+Subscription.belongsTo(Libro, { foreignKey: "libroId" })
+
+export { Notification, Role, User, Libro, Permission, RolePermission, Subscription }

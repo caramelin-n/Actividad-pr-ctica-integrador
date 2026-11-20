@@ -1,15 +1,16 @@
 import { Model, DataTypes, type InferAttributes, type InferCreationAttributes,type CreationOptional } from "sequelize";
 import { DBConnection } from "../database/DatabaseConnection.js";
 
-type estadosDisponibles = 'DISPONIBLE' | 'PRESTADO' | 'EN_REPARACION'
+export const ESTADOS_LIBRO = ['DISPONIBLE', 'PRESTADO', 'EN_REPARACION'] as const
+export type estadosDisponibles = typeof ESTADOS_LIBRO[number]
 
 export class Libro extends Model <InferAttributes<Libro>, InferCreationAttributes<Libro>> {
     declare id: CreationOptional<number>;
     declare title: string;
     declare description: string;
-    declare state: estadosDisponibles;
-    declare createdAt: Date;
-    declare updatedAt: Date;
+    declare state: CreationOptional<estadosDisponibles>;
+    declare createdAt: CreationOptional<Date>;
+    declare updatedAt: CreationOptional<Date>;
 }
 
 Libro.init(
@@ -28,8 +29,9 @@ Libro.init(
             allowNull: false,
         },
         state: {
-            type: DataTypes.ENUM("DISPONIBLE", "PRESTADO", "EN_REPARACION"),
+            type: DataTypes.ENUM(...ESTADOS_LIBRO),
             allowNull: false,
+            defaultValue: "DISPONIBLE",
         },
         createdAt: DataTypes.DATE,
         updatedAt: DataTypes.DATE,
