@@ -49,14 +49,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = useCallback(async (email: string, password: string) => {
-    const u = await authApi.login(email, password);
+    await authApi.login(email, password);
+    const u = await authApi.sesion();
     setUser(u);
   }, []);
 
   const registrar = useCallback(async (email: string, password: string) => {
-    const u = await authApi.registrar(email, password);
-    setUser(u);
-  }, []);
+    await authApi.registrar(email, password);
+    await login(email, password);
+  }, [login]);
 
   const logout = useCallback(async () => {
     await authApi.logout();
@@ -64,7 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const tienePermiso = useCallback(
-    (permiso: Permiso): boolean => user?.permisos.includes(permiso) ?? false,
+    (permiso: Permiso): boolean => user?.permissions.includes(permiso) ?? false,
     [user],
   );
 

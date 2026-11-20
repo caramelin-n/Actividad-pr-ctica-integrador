@@ -3,11 +3,11 @@ import { api } from "./client";
 
 export const authApi = {
   login: (email: string, password: string) =>
-    api.post<User>("/auth/login", { email, password }),
+    api.post<{ message: string; token: string }>("/auth/login", { email, password }),
 
   // El body coincide con RegisterUserDTO del backend: solo email y password.
   registrar: (email: string, password: string) =>
-    api.post<User>("/auth/register", { email, password }),
+    api.post<{ id: number; email: string }>("/auth/register", { email, password }),
 
   // Se llama al montar la app para recuperar la sesion. Con cookie httpOnly
   // el frontend no puede leerla, tiene que preguntarle al backend.

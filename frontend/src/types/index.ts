@@ -12,29 +12,43 @@ export type Permiso = string;
 export interface User {
   id: number;
   email: string;
-  // El backend no manda nombre: RegisterUserDTO y UserResponseDTO son
-  // { email, password } / { id, email, roleId }. Si algún dia lo agrega,
-  // se vuelve a sumar aca y al Navbar.
-  rol: Rol;
-  permisos: Permiso[];
+  role: Rol | null;
+  permissions: Permiso[];
+}
+
+export interface UserListItem {
+  id: number;
+  email: string;
+  roleId: number | null;
+  role: Rol | null;
 }
 
 export type EstadoLibro = "DISPONIBLE" | "PRESTADO" | "EN_REPARACION";
 
+export const ESTADOS_LIBRO: EstadoLibro[] = ["DISPONIBLE", "PRESTADO", "EN_REPARACION"];
+
 export interface Libro {
   id: number;
-  titulo: string;
-  descripcion: string;
-  estado: EstadoLibro;
+  title: string;
+  description: string;
+  state: EstadoLibro;
   createdAt: string;
   updatedAt: string;
 }
 
-export interface Notification {
+export interface Subscription {
   id: number;
   userId: number;
   libroId: number;
-  mensaje: string;
-  leida: boolean;
+  libroTitle?: string;
+}
+
+export type EstadoNotificacion = "leida" | "no leida";
+
+export interface Notification {
+  id: number;
+  userId: number;
+  message: string;
+  status: EstadoNotificacion;
   createdAt: string;
 }

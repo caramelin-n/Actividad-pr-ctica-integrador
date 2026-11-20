@@ -17,7 +17,7 @@ let onUnauthorized: (() => void) | null = null
 export function setUnauthorizedHandler(handler: () => void): void{
   onUnauthorized = handler
 };
-type Method = "GET" | "POST" | "PATCH" | "DELETE";
+type Method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 export async function request<T>(
   path: string,
   method: Method,
@@ -33,17 +33,30 @@ export async function request<T>(
     onUnauthorized?.();
   };
   if (!response.ok){
-    const fallback = await response.text()
     throw new ApiError(
-      response.status, fallback || response.statusText
+      response.status, await leerMensajeDeError(response)
     );
   };
   const text = await response.text();
   return (text ? JSON.parse(text): undefined) as T
 };
+async function leerMensajeDeError(response: Response): Promise<string> {
+  const text = await response.text();
+  try {
+    const data: unknown = JSON.parse(text);
+    if (data && typeof data === "object" && "errorMessage" in data && typeof data.errorMessage === "string") {
+      return data.errorMessage;
+    }
+  } catch {
+    return text || response.statusText;
+  }
+  return text || response.statusText;
+}
+
 export const api = {
   get: <T>(path: string) => request<T>(path, 'GET'),
   post: <T>(path: string, body?: unknown) => request<T>(path, 'POST', body),
+  put: <T>(path: string, body?: unknown) => request<T>(path, 'PUT', body),
   patch: <T>(path: string, body?: unknown) => request<T>(path, 'PATCH', body),
   delete: <T>(path: string) => request<T>(path, 'DELETE'),
 };
