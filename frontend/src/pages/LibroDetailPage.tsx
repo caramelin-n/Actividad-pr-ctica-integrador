@@ -1,8 +1,9 @@
 // comentarios hechos con inteligencia artesanal para ayudarme a entender mejor (no usé ia) (bueno un poco pero solo para explicaciones)
 import { useEffect, useState } from "react"; //usestate para guardar datos que cuando cambian vuelven a dibujar la pantalla. useeffect para ejecutar codigo en momentos concretos
-import { useParams, useNavigate } from "react-router"; //useparams lee el :id de la url y usenavigate cambia la ruta desde el codigo
+import { Link, useParams, useNavigate } from "react-router"; //useparams lee el :id de la url y usenavigate cambia la ruta desde el codigo
 import { librosApi } from "../api/libros.api";
 import { Can } from "../components/Can";
+import { ESTADOS_LIBRO } from "../types";
 import type { Libro, EstadoLibro } from "../types";
 import { useAuth } from "../context/AuthContext";
 //todo esto son importaciones del propio sistema que armamos
@@ -87,44 +88,69 @@ export const LibroDetailPage = () => {
     }
   };
 
+  const handleEliminar = async () => {
+    if (!libro) return;
+    if (!window.confirm(`¿Eliminar "${libro.title}"? Esta acción no se puede deshacer.`)) return;
+    setErrorAccion(null);
+    try {
+      await librosApi.eliminar(libro.id);
+      navigate("/");
+    } catch (err) {
+      setErrorAccion(err instanceof Error ? err.message : "No se pudo eliminar el libro");
+    }
+  };
+
   if (cargando) return <p>Cargando...</p>; //mientras se espera respuesta del backend la pagina muestra el cargando
   if (error) return <p role="alert">{error}</p>; //si falló la carga del libro muestra el error role="alert"
   if (!libro) return <p>Libro no encontrado</p>; //Si cargó pero no hay libro lo informa
 
-  const estados: EstadoLibro[] = ["DISPONIBLE", "PRESTADO", "EN_REPARACION"]; //se repite los estados para que aparezca en el javascript final
 
   return (
     //contenedor principal
     <div className="contenedor">
       {/* //muestra el titulo y descripcion del libro */}
-      <h1>{libro.titulo}</h1>
-      <p>{libro.descripcion}</p>
+      <h1>{libro.title}</h1>
+      <p>{libro.description}</p>
       <div className="libro-meta">
-        <span className={`badge badge-${libro.estado.toLowerCase()}`}>
-          {libro.estado}
+        <span className={`badge badge-${libro.state.toLowerCase()}`}>
+          {libro.state}
         </span>
         <span>Creado: {new Date(libro.createdAt).toLocaleDateString()}</span>
         <span>Actualizado: {new Date(libro.updatedAt).toLocaleDateString()}</span>
       </div>
 
       <div className="acciones-libro">
-        <button
-          onClick={handleSubscribe}
-          className={subscribed ? "boton-secundario" : "boton"}
-        >
-          {subscribed ? "Desuscribirse" : "Suscribirse"}
-        </button>
+        <Can permiso={subscribed ? "subscription:delete" : "subscription:create"}>
+          <button
+            onClick={handleSubscribe}
+            className={subscribed ? "boton-secundario" : "boton"}
+          >
+            {subscribed ? "Desuscribirse" : "Suscribirse"}
+          </button>
+        </Can>
+
+        <Can permiso="libro:update">
+          <Link to={`/libros/${libro.id}/editar`} className="boton-secundario">
+            Editar
+          </Link>
+        </Can>
+
+        <Can permiso="libro:delete">
+          <button type="button" onClick={handleEliminar} className="boton-peligro">
+            Eliminar
+          </button>
+        </Can>
 
         <Can permiso="libro:change-status">
           <div className="cambio-estado">
             <label>
               Cambiar estado:
               <select
-                value={libro.estado}
+                value={libro.state}
                 onChange={(e) => handleCambiarEstado(e.target.value as EstadoLibro)}
                 disabled={cambiandoEstado}
               >
-                {estados.map((e) => (
+                {ESTADOS_LIBRO.map((e) => (
                   <option key={e} value={e}>
                     {e}
                   </option>
@@ -139,7 +165,7 @@ export const LibroDetailPage = () => {
           error en el estado pero no lo mostraria nunca. */}
       {errorAccion && <p role="alert">{errorAccion}</p>}
 
-      <button onClick={() => navigate(-1)} className="boton-secundario">
+      <button onClick={() => navigate("/")} className="boton-secundario boton-volver">
         Volver a la lista
       </button>
     </div>

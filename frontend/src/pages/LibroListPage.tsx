@@ -32,11 +32,11 @@ export const LibroListPage = () => {
   const librosFiltrados = useMemo(() => {
     const termino = busqueda.trim().toLowerCase();
     return libros.filter((l) => {
-      const coincideEstado = filtro === "TODOS" || l.estado === filtro;
+      const coincideEstado = filtro === "TODOS" || l.state === filtro;
       const coincideBusqueda =
         termino === "" ||
-        l.titulo.toLowerCase().includes(termino) ||
-        l.descripcion.toLowerCase().includes(termino);
+        l.title.toLowerCase().includes(termino) ||
+        l.description.toLowerCase().includes(termino);
       return coincideEstado && coincideBusqueda;
     });
   }, [libros, filtro, busqueda]);
@@ -48,7 +48,7 @@ export const LibroListPage = () => {
       EN_REPARACION: [],
     };
     for (const l of librosFiltrados) {
-      grupos[l.estado].push(l);
+      grupos[l.state].push(l);
     }
     return grupos;
   }, [librosFiltrados]);
@@ -91,10 +91,10 @@ export const LibroListPage = () => {
           {agrupados.DISPONIBLE.map((l) => (
             <li key={l.id} className="tarjeta-libro">
               <Link to={`/libros/${l.id}`}>
-                <h3>{l.titulo}</h3>
-                <p>{l.descripcion}</p>
-                <span className={`badge badge-${l.estado.toLowerCase()}`}>
-                  {l.estado}
+                <h3>{l.title}</h3>
+                <p>{l.description}</p>
+                <span className={`badge badge-${l.state.toLowerCase()}`}>
+                  {l.state}
                 </span>
               </Link>
             </li>
@@ -109,10 +109,10 @@ export const LibroListPage = () => {
           {agrupados.PRESTADO.map((l) => (
             <li key={l.id} className="tarjeta-libro">
               <Link to={`/libros/${l.id}`}>
-                <h3>{l.titulo}</h3>
-                <p>{l.descripcion}</p>
-                <span className={`badge badge-${l.estado.toLowerCase()}`}>
-                  {l.estado}
+                <h3>{l.title}</h3>
+                <p>{l.description}</p>
+                <span className={`badge badge-${l.state.toLowerCase()}`}>
+                  {l.state}
                 </span>
               </Link>
             </li>
@@ -127,10 +127,10 @@ export const LibroListPage = () => {
           {agrupados.EN_REPARACION.map((l) => (
             <li key={l.id} className="tarjeta-libro">
               <Link to={`/libros/${l.id}`}>
-                <h3>{l.titulo}</h3>
-                <p>{l.descripcion}</p>
-                <span className={`badge badge-${l.estado.toLowerCase()}`}>
-                  {l.estado}
+                <h3>{l.title}</h3>
+                <p>{l.description}</p>
+                <span className={`badge badge-${l.state.toLowerCase()}`}>
+                  {l.state}
                 </span>
               </Link>
             </li>
