@@ -15,7 +15,7 @@ BibliotecaTS es una aplicación para gestionar los libros de una biblioteca. Cad
 ## Requisitos previos
 - Docker y Docker Compose
 - Git
-- (Opcional, para desarrollo local) Node.js 24
+- (Opcional, para desarrollo local) Node.js 24 y pnpm
 
 ## Cómo ejecutar el proyecto
 
@@ -33,7 +33,9 @@ BibliotecaTS es una aplicación para gestionar los libros de una biblioteca. Cad
    docker compose up --build
    ```
 4. El seed de roles, permisos, usuarios de prueba y libros de ejemplo se ejecuta automáticamente al iniciar el backend. No hace falta ningún paso extra.
-5. API: http://localhost:3000/api
+5. Abrir la aplicación:
+   - Frontend: http://localhost:8080
+   - API: http://localhost:3000/api
 
 ## Ejecución sin Docker (opcional)
 
@@ -58,6 +60,17 @@ npm run build
 npm start
 ```
 
+### Frontend
+Con el backend corriendo en `http://localhost:3000`:
+
+```bash
+cd frontend
+pnpm install
+pnpm dev
+```
+
+Vite levanta el frontend en http://localhost:5173 y usa `VITE_API_URL` (por defecto `http://localhost:3000/api`).
+
 ## Variables de entorno
 
 | Variable | Descripción | Ejemplo |
@@ -69,6 +82,7 @@ npm start
 | `DB_PORT` | Puerto de la base de datos | `5432` |
 | `JWT_SECRET` | Clave para firmar los tokens | `mi_super_clave_secreta` |
 | `API_PORT` | Puerto del backend | `3000` |
+| `VITE_API_URL` | URL de la API para el frontend | `http://localhost:3000/api` |
 
 ## Usuarios de prueba
 
@@ -91,9 +105,9 @@ Authorization: Bearer <token>
 El token vence a la hora.
 
 ## Cómo probar el flujo de notificaciones
-1. Ingresar como `usuario` y suscribirse a un libro (`POST /api/subscriptions` con `{ "libroId": 1 }`).
-2. En otra sesión, ingresar como `operador` y cambiar el estado de ese libro (`PATCH /api/libros/1/state` con `{ "state": "PRESTADO" }`).
-3. Volver a la sesión de `usuario`: la notificación aparece en `GET /api/notifications`, y `GET /api/notifications/unread-count` muestra el contador de no leídas.
+1. Ingresar como `usuario` en http://localhost:8080, entrar a un libro y presionar **Suscribirse**.
+2. En otra ventana (o en incógnito), ingresar como `operador`, entrar al mismo libro y cambiar su estado con el selector **Cambiar estado**.
+3. Volver a la sesión de `usuario`: en menos de 10 segundos la campana de la barra superior muestra el contador de no leídas, y la notificación aparece en **Notificaciones**, donde se puede marcar como leída.
 4. Verificar la notificación en la consola del backend:
    ```bash
    docker compose logs backend
